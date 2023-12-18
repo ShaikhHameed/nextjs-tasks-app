@@ -1,10 +1,12 @@
 "use client"
+import { useRouter } from 'next/navigation'
 import { useState } from 'react';
 
 
 export default function ModalForm(){
 
   
+  const router = useRouter();
   
   
   const [formStatus, setFormStatus] = useState(false);
@@ -14,54 +16,47 @@ export default function ModalForm(){
   });
 
   const [fomrResult,setFormresult] = useState(null);
+  const [taskData,setTaskData] = useState({});
+
 
   const handleChange =(e)=>{
       const {name, value} = e.target;
       setFormdata({...formdata,[name]:value});
   }
+
+  const storedTaskData = localStorage.getItem('tasks');
+  const TaskData = storedTaskData ? JSON.parse(storedTaskData): [] ;
   
     const submitForm = async(e)=>{
           e.preventDefault();
 
+          const newItem = { id: generateUniqueId(), name: formdata.name, notes: formdata.notes };
+
+          // Add the new item to the TaskData array
+          const updatedTaskData = [...TaskData, newItem];
+
+          // Update the state with the new TaskData
+          setTaskData(updatedTaskData);
+
           setFormStatus(true);
+          setFormresult('success');
 
-          const requestData = JSON.stringify(formdata)
+          // Update localStorage with the new TaskData
+          localStorage.setItem('tasks', JSON.stringify(updatedTaskData));
 
-          console.log();
-          
-          try{
-            const fetchdata = await fetch('/api/hello',{
-              method:"POST",
-              body: requestData,
-            });
-  
-            const response = await fetchdata.json();
-            if(response.status===200){
-              setFormStatus(false);
-              setFormresult("success");
-              setTimeout(()=>{
-                setFormresult(null);
-              },2000);
-            }
-            else{
-              setFormStatus(false);
-              setFormresult("failed");
-              setTimeout(()=>{
-                setFormresult(null);
-              },2000);
-            }
-          }
-          catch(err){
+          setTimeout(()=>{
             setFormStatus(false);
-            setFormresult("not-connected");
-            setTimeout(()=>{
-              setFormresult(null);
-            },2000);
-            console.log(err);
-          }
-
-
+            setFormresult('');
+          },3000)
+          router.refresh();
       }
+
+      const generateUniqueId = () => {
+        // Implement your unique ID generation logic here
+        // This can be a simple counter or use a library like uuid
+        // For simplicity, using a timestamp in this example
+        return new Date().getTime();
+      };
 
     return(
 

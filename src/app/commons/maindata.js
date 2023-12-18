@@ -2,7 +2,7 @@ const MainData = [
   {
     "id": "e6dd15fd-f4d4-4cee-bdc5-853d4580035a",
     "name": "Shaikh Hameed Kamal Lol",
-    "notes": "Description Lorem Ipsum Madarchodey"
+    "notes": "Description Lorem Ipsum "
   },
   {
     "id": "387153ca-1309-40f3-9ef4-830692785b6d",

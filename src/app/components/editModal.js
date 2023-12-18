@@ -33,46 +33,38 @@ export default function EditModal({currentId,currentName,currentNotes}){
     }
 
 
-
+    const storedTaskData = localStorage.getItem('tasks');
+    const TaskData = storedTaskData ? JSON.parse(storedTaskData): [] ;
 
 
     const submitForm = async(e)=>{
         e.preventDefault();
 
-        const postData = JSON.stringify(formdata);
+        const index  = TaskData.findIndex((item)=>item.id == currentId);
+        
+        const updatedItem = { ...TaskData[index], name: formdata.name, notes: formdata.notes };
 
-        try{
+        // Create a new array with the updated item
+        const updatedTaskData = [
+          ...TaskData.slice(0, index),
+          updatedItem,
+          ...TaskData.slice(index + 1),
+        ];
+        
+        setFormStatus(true);
+        setFormresult('success');
 
-            const postAction = await fetch(`/api/hello?id=${formdata.id}`,{
-                method:"PUT",
-                body:postData,
-            })
-    
-            const response = await postAction.json();
-                if(response.status===200){
-                  setFormStatus(false);
-                  setFormresult("success");
-                  setTimeout(()=>{
-                    setFormresult(null);
-                  },2000);
-                }
-                else{
-                  setFormStatus(false);
-                  setFormresult("failed");
-                  setTimeout(()=>{
-                    setFormresult(null);
-                  },2000);
-                }
+        // Update localStorage with the updated TaskData
+        localStorage.setItem('tasks', JSON.stringify(updatedTaskData));
+        router.refresh();
+        setTimeout(()=>{
+          setFormStatus(false);
+          setFormresult('');
+        },3000);
 
-        }
-        catch(err){
-            setFormStatus(false);
-            setFormresult("not-connected");
-            setTimeout(()=>{
-              setFormresult(null);
-            },2000);
-            console.log(err);
-        }
+        const modal = new bootstrap.Modal(document.getElementById('editModal'));
+        modal.hide();
+        
 
     }
   

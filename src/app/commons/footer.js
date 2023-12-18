@@ -9,7 +9,7 @@ export default function Footer(){
     return(
 
         <>
-            <p className="text-center small text-secondary">Task App© {fullYear}. Developed by Yours Truly</p>
+            <p className="text-center small text-secondary">Task App© {fullYear}.</p>
         </>
     )
 }
