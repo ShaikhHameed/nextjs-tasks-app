@@ -1,10 +1,12 @@
 "use client"
 
+import { useRouter } from 'next/navigation'
 import { useState,useEffect } from "react"
 
 
 export default function EditModal({currentId,currentName,currentNotes}){
 
+    const router = useRouter();
 
     const [formStatus, setFormStatus] = useState(false);
     const [fomrResult,setFormresult] = useState(null);
@@ -61,9 +63,6 @@ export default function EditModal({currentId,currentName,currentNotes}){
           setFormStatus(false);
           setFormresult('');
         },3000);
-
-        const modal = new bootstrap.Modal(document.getElementById('editModal'));
-        modal.hide();
         
 
     }
@@ -90,7 +89,7 @@ export default function EditModal({currentId,currentName,currentNotes}){
                                     <input className='form-control' name="notes" value={formdata.notes} onChange={handleChange}  />
                                     </div>
                                     <div className='form-group'>
-                                    <button type="submit" class="btn btn-primary d-block my-3 ms-auto">{formStatus== true? 'Updating...' : 'Update'}</button>
+                                    <button type="submit" class="btn btn-primary d-block my-3 ms-auto">{formStatus== true ? 'Updating...' : 'Update'}</button>
                                     </div>
                                     <div class="py-1">
                                         {fomrResult == "success" &&(

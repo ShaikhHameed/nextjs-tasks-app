@@ -19,15 +19,11 @@ export default function DisplayForm(){
   const TaskData = storedTaskData ? JSON.parse(storedTaskData): [] ;
 
   if (TaskData.length === 0) {
-    const DefaultTask  = {};
-      // { id:53,name: 'Default Task 1', notes: 'Default Notes 1' }
-  
-  
-
-  TaskData.push(DefaultTask);
+    // const DefaultTask = {id:'53',name:'Write Code', notes:'Write codes for Tasks App.'};
+    // TaskData.push(DefaultTask);
 
 
-  localStorage.setItem('tasks', JSON.stringify(TaskData));
+  localStorage.setItem('tasks',[]);
 }
 
     
@@ -40,10 +36,6 @@ export default function DisplayForm(){
 
         // Update localStorage with the updated TaskData
         localStorage.setItem('tasks', JSON.stringify(updatedTaskData));
-        
-
-       
-
 
       }
 

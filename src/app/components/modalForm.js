@@ -38,6 +38,8 @@ export default function ModalForm(){
           // Update the state with the new TaskData
           setTaskData(updatedTaskData);
 
+          
+
           setFormStatus(true);
           setFormresult('success');
 
@@ -47,6 +49,7 @@ export default function ModalForm(){
           setTimeout(()=>{
             setFormStatus(false);
             setFormresult('');
+            setFormdata({name:"",notes:""});
           },3000)
           router.refresh();
       }
