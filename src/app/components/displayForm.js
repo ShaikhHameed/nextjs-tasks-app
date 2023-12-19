@@ -1,66 +1,46 @@
-"use client"
-import { useEffect, useState } from "react";
-// import MainData from "../commons/maindata";
-import EditModal from "./editModal";
+// Import bootstrap here if not already done
+// import 'bootstrap/dist/css/bootstrap.min.css';
+"use client";
+import { useEffect, useState } from 'react';
+import EditModal from './editModal';
 
+export default function DisplayForm() {
+  const [currId, setCurrId] = useState(null);
+  const [currName, setCurrName] = useState(null);
+  const [currNotes, setCurrNotes] = useState(null);
+  const [taskData, setTaskData] = useState({});
 
+  useEffect(() => {
+    // Move localStorage operations into useEffect to ensure it runs only in the client
+    const storedTaskData = localStorage.getItem('tasks');
+    const TaskData = storedTaskData ? JSON.parse(storedTaskData) : [];
 
+    if (TaskData.length === 0) {
+      // const DefaultTask = {id:'53',name:'Write Code', notes:'Write codes for Tasks App.'};
+      // TaskData.push(DefaultTask);
+      localStorage.setItem('tasks', []);
+    }
 
-export default function DisplayForm(){
+    setTaskData(TaskData);
+  }, []); // Run this effect only once on component mount
 
-  const [currId,setCurrId] = useState(null);
-  const [currName,setCurrName] = useState(null);
-  const [currNotes,setCurrNotes] = useState(null);
+  const deleteTask = (itemId) => {
+    const updatedTaskData = taskData.filter((item) => item.id !== itemId);
+    setTaskData(updatedTaskData);
+    localStorage.setItem('tasks', JSON.stringify(updatedTaskData));
+  };
 
-  
-  const [taskData,setTaskData] = useState({});
-
-  const storedTaskData = localStorage.getItem('tasks');
-  const TaskData = storedTaskData ? JSON.parse(storedTaskData): [] ;
-
-  if (TaskData.length === 0) {
-    // const DefaultTask = {id:'53',name:'Write Code', notes:'Write codes for Tasks App.'};
-    // TaskData.push(DefaultTask);
-
-
-  localStorage.setItem('tasks',[]);
-}
-
-    
-      const deleteTask = (itemId)=>{
-
-        const updatedTaskData = TaskData.filter((item) => item.id !== itemId);
-
-        // Update the state with the updated TaskData
-        setTaskData(updatedTaskData);
-
-        // Update localStorage with the updated TaskData
-        localStorage.setItem('tasks', JSON.stringify(updatedTaskData));
-
-      }
-
-
-
-  const passCurrentData = (itemId,itemName,itemNotes)=>{
-
-    setCurrId(itemId)
-    setCurrName(itemName)
-    setCurrNotes(itemNotes)
-
-    console.log(itemId);
+  const passCurrentData = (itemId, itemName, itemNotes) => {
+    setCurrId(itemId);
+    setCurrName(itemName);
+    setCurrNotes(itemNotes);
 
     const modal = new bootstrap.Modal(document.getElementById('editModal'));
     modal.show();
-  }
+  };
 
-
-
-
-
-    return (
-      <>
-      {/* //<EditModal  currentId={currId} currentName={currName} currentNotes={currNotes}/> */}
-
+  return (
+    <>
       {currId !== null && (
         <EditModal
           currentId={currId}
@@ -69,9 +49,7 @@ export default function DisplayForm(){
         />
       )}
 
-  
-      
-    {TaskData.length > 0 ? (
+      {taskData.length > 0 ? (
         <table className="table">
           <thead>
             <tr>
@@ -83,7 +61,7 @@ export default function DisplayForm(){
             </tr>
           </thead>
           <tbody>
-            {TaskData.map((item, index) => (
+            {taskData.map((item, index) => (
               <tr key={index}>
                 <td>{index + 1}</td>
                 <td>{item.name}</td>
@@ -92,7 +70,7 @@ export default function DisplayForm(){
                   <button
                     className="btn btn-dark"
                     onClick={() => {
-                      passCurrentData( item.id,item.name, item.notes);
+                      passCurrentData(item.id, item.name, item.notes);
                     }}
                   >
                     Edit
@@ -101,20 +79,19 @@ export default function DisplayForm(){
                 <td>
                   <button
                     className="btn btn-danger"
-                    onClick={() => deleteTask(item.id)}
-                  >
-                    Delete
-                  </button>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      ) : (
-        <p className="text-center fw-semibold my-5 fs-4">No tasks available</p>
-      )}
-
-  </>
-    )
+                    onClick={() => deleteTask
+                      (item.id)}
+                      >
+                      Delete
+                      </button>
+                      </td>
+                      </tr>
+                      ))}
+                      </tbody>
+                      </table>
+                      ) : (
+                      <p className="text-center fw-semibold my-5 fs-4">No tasks available</p>
+                      )}
+                      </>
+                      );
 }
-
